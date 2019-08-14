@@ -56,7 +56,7 @@ action_6 (13) = happyShift action_14
 action_6 (15) = happyShift action_22
 action_6 _ = happyFail
 
-action_7 _ = happyReduce_2
+action_7 _ = happyReduce_5
 
 action_8 (5) = happyShift action_2
 action_8 (11) = happyShift action_4
@@ -125,37 +125,38 @@ action_18 (7) = happyShift action_9
 action_18 (8) = happyShift action_10
 action_18 _ = happyReduce_6
 
-action_19 _ = happyReduce_3
+action_19 (7) = happyShift action_9
+action_19 _ = happyReduce_4
 
-action_20 (8) = happyShift action_10
-action_20 _ = happyReduce_5
+action_20 _ = happyReduce_2
 
-action_21 (8) = happyShift action_10
-action_21 _ = happyReduce_4
+action_21 (7) = happyShift action_9
+action_21 _ = happyReduce_3
 
 action_22 _ = happyReduce_10
 
 happyReduce_1 = happySpecReduce_1  4 happyReduction_1
 happyReduction_1 (HappyTerminal (TokenDigit happy_var_1))
 	 =  HappyAbsSyn4
-		 (happy_var_1
+		 (Num happy_var_1
 	)
 happyReduction_1 _  = notHappyAtAll 
 
-happyReduce_2 = happySpecReduce_2  4 happyReduction_2
-happyReduction_2 (HappyAbsSyn4  happy_var_2)
+happyReduce_2 = happySpecReduce_3  4 happyReduction_2
+happyReduction_2 (HappyAbsSyn4  happy_var_3)
 	_
+	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_2
+		 (Times happy_var_1 happy_var_3
 	)
-happyReduction_2 _ _  = notHappyAtAll 
+happyReduction_2 _ _ _  = notHappyAtAll 
 
 happyReduce_3 = happySpecReduce_3  4 happyReduction_3
 happyReduction_3 (HappyAbsSyn4  happy_var_3)
 	_
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1 * happy_var_3
+		 (Plus happy_var_1 happy_var_3
 	)
 happyReduction_3 _ _ _  = notHappyAtAll 
 
@@ -164,52 +165,51 @@ happyReduction_4 (HappyAbsSyn4  happy_var_3)
 	_
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1 + happy_var_3
+		 (Minus happy_var_1 happy_var_3
 	)
 happyReduction_4 _ _ _  = notHappyAtAll 
 
-happyReduce_5 = happySpecReduce_3  4 happyReduction_5
-happyReduction_5 (HappyAbsSyn4  happy_var_3)
+happyReduce_5 = happySpecReduce_2  4 happyReduction_5
+happyReduction_5 (HappyAbsSyn4  happy_var_2)
 	_
-	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1 - happy_var_3
+		 (Neg happy_var_2
 	)
-happyReduction_5 _ _ _  = notHappyAtAll 
+happyReduction_5 _ _  = notHappyAtAll 
 
 happyReduce_6 = happySpecReduce_3  4 happyReduction_6
 happyReduction_6 (HappyAbsSyn4  happy_var_3)
 	_
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1 == happy_var_3
+		 (Eq happy_var_1 happy_var_3
 	)
 happyReduction_6 _ _ _  = notHappyAtAll 
 
 happyReduce_7 = happySpecReduce_3  4 happyReduction_7
-happyReduction_7 _
+happyReduction_7 (HappyAbsSyn4  happy_var_3)
 	_
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1
+		 (Diff happy_var_1 happy_var_3
 	)
 happyReduction_7 _ _ _  = notHappyAtAll 
 
 happyReduce_8 = happySpecReduce_3  4 happyReduction_8
-happyReduction_8 _
+happyReduction_8 (HappyAbsSyn4  happy_var_3)
 	_
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1
+		 (And happy_var_1 happy_var_3
 	)
 happyReduction_8 _ _ _  = notHappyAtAll 
 
 happyReduce_9 = happySpecReduce_3  4 happyReduction_9
-happyReduction_9 _
+happyReduction_9 (HappyAbsSyn4  happy_var_3)
 	_
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (happy_var_1
+		 (Or happy_var_1 happy_var_3
 	)
 happyReduction_9 _ _ _  = notHappyAtAll 
 
@@ -218,7 +218,7 @@ happyReduction_10 _
 	(HappyAbsSyn4  happy_var_2)
 	_
 	 =  HappyAbsSyn4
-		 ((happy_var_2)
+		 (InBrk happy_var_2
 	)
 happyReduction_10 _ _ _  = notHappyAtAll 
 
@@ -230,8 +230,8 @@ happyNewToken action sts stk (tk:tks) =
 	case tk of {
 	TokenDigit happy_dollar_dollar -> cont 5;
 	TokenPlus -> cont 6;
-	TokenMinus -> cont 7;
-	TokenStar -> cont 8;
+	TokenStar -> cont 7;
+	TokenMinus -> cont 8;
 	TokenEq -> cont 9;
 	TokenDiff -> cont 10;
 	TokenNeg -> cont 11;
@@ -274,6 +274,19 @@ parser tks = happyRunIdentity happySomeParser where
 
 happySeq = happyDontSeq
 
+
+data Exp = 
+    Num Double
+    | Times Exp Exp
+    | Plus Exp Exp
+    | Minus Exp Exp
+    | Neg Exp
+    | Eq Exp Exp
+    | Diff Exp Exp
+    | And Exp Exp
+    | Or Exp Exp
+    | InBrk Exp
+    deriving (Eq, Show)
 
 parseError :: [Token] -> a
 parseError _ = error "Parse error"

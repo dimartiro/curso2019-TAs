@@ -12,8 +12,8 @@ import qualified Data.Maybe as Maybe
 %token
     NUM     { TokenDigit $$ }
     PLUS     { TokenPlus }
-    MINUS     { TokenMinus }
     STAR     { TokenStar }
+    MINUS   { TokenMinus }
     EQ     { TokenEq }
     DIFF     { TokenDiff }
     NEG { TokenNeg }
@@ -30,18 +30,31 @@ import qualified Data.Maybe as Maybe
 %left NEG
 %% 
 
-exp : NUM   { $1 }
- | NEG exp { $2 }
- | exp STAR exp { $1 * $3 }
- | exp PLUS exp { $1 + $3 }
- | exp MINUS exp { $1 - $3 }
- | exp EQ exp { $1 == $3 }
- | exp DIFF exp { $1 }
- | exp AND exp { $1 }
- | exp OR exp { $1 } 
- | OPAREN exp CPAREN { ($2) }
+exp : NUM  { Num $1 }
+    | exp STAR exp { Times $1 $3 }
+    | exp PLUS exp { Plus $1 $3 }
+    | exp MINUS exp { Minus $1 $3 }
+    | NEG exp { Neg $2 }
+    | exp EQ exp { Eq $1 $3 }
+    | exp DIFF exp { Diff $1 $3 }
+    | exp AND exp { And $1 $3 }
+    | exp OR exp { Or $1 $3 } 
+    | OPAREN exp CPAREN { InBrk $2 }
 
 {
+data Exp = 
+    Num Double
+    | Times Exp Exp
+    | Plus Exp Exp
+    | Minus Exp Exp
+    | Neg Exp
+    | Eq Exp Exp
+    | Diff Exp Exp
+    | And Exp Exp
+    | Or Exp Exp
+    | InBrk Exp
+    deriving (Eq, Show)
+
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 }
