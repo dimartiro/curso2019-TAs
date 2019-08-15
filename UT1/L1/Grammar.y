@@ -1,8 +1,6 @@
 {
 module Grammar where
 import Tokens
-import qualified Data.Map as Map
-import qualified Data.Maybe as Maybe
 }
 
 %name parser
